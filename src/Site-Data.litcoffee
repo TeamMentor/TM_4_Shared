@@ -39,8 +39,11 @@ SiteData repo
 **siteData_Folder:** Calculates the location of the SiteData using the following formula
 
 1) if there is a SiteData folder inside the @.config_Folder() use it
+
 2) if the ENV_TM_SITE_DATA environment variable exists:
+
 2.a) if it is a full path use it
+
 2.b) combine its value with @.config_Folder()
 
       siteData_Folder: ()=>
