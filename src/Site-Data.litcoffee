@@ -36,11 +36,10 @@ SiteData repo
         @.options()
 
 **siteData_Folder:** Calculates the location of the SiteData using the following formula
-
-If there is a SiteData folder inside the config_Folder() use it
-If the ENV_TM_SITE_DATA environment variable exists: use it
-If the ENV_TM_SITE_DATA environment variable doesn't exists: combine its value with .config_Folder()
-
+>
+* If there is a SiteData folder inside the config_Folder() use it
+* If the ENV_TM_SITE_DATA environment variable exists: use it
+* If the ENV_TM_SITE_DATA environment variable doesn't exists: combine its value with .config_Folder()
       siteData_Folder: ()=>
         config_SideData = @.config_Folder().path_Combine static_Strings.FOLDER_SITE_DATA
         if config_SideData and config_SideData.folder_Exists()
