@@ -4,7 +4,8 @@
 
     class Config
 
-      constructor: ->
+      constructor: (options)->
+        @.options = options || {}
 
       cache_Folder: ()=>
         process.cwd().path_Combine static_Strings.FOLDER_TM_CACHE

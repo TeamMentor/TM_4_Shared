@@ -11,8 +11,14 @@ SiteData repo
       constructor: (options)->
         @._options = options || {}
 
+Tries to find a 'config' folder in one of the parent folders of the current directory (__dirname)
+
       config_Folder: ()=>
-        __dirname.path_Combine static_Strings.RELATIVE_PATH_TO_CONFIG_FOLDER
+        folder = __dirname
+        while folder isnt (folder = folder.parent_Folder())
+          target = folder.path_Combine static_Strings.FOLDER_CONFIG
+          if target.file_Exists()
+            return target
 
       options: ()=>
         @._options
@@ -20,23 +26,19 @@ SiteData repo
       load_Options: ()=>
         tmConfig_File = @.siteData_TM_Config()?.real_Path()
         if tmConfig_File?.file_Exists()                                     # if @.siteData_TM_Config exists
-          tmConfig = tmConfig_File.load_Json()                              # load as json
-          if (tmConfig)                                                     # if data was loaded ok
-            @._options = tmConfig                                           # set @.options with loaded object
+          @._options = tmConfig_File.load_Json()                            # load as json and set @._options with loaded object
         @.options()
 
 
-siteData_Folder:
-
-This method calculates the location of the SiteData using the following formula
+Calculates the location of the SiteData using the following formula
 
 * if there is a SiteData folder inside the @.config_Folder() use it
-* if the TM_SITE_DATA environment variable exists:
+* if the ENV_TM_SITE_DATA environment variable exists:
 ** if it is a full path use it
 ** combine its value with @.config_Folder()
 
       siteData_Folder: ()=>
-        config_SideData = @.config_Folder().path_Combine static_Strings.DEFAULT_SITE_DATA
+        config_SideData = @.config_Folder().path_Combine static_Strings.FOLDER_SITE_DATA
         if config_SideData and config_SideData.folder_Exists()
           return config_SideData
 
@@ -46,8 +48,7 @@ This method calculates the location of the SiteData using the following formula
           if env_Site_Data.folder_Exists()
             return env_Site_Data
           else
-            log @.config_Folder
-            return @.config_Folder.path_Combine env_Site_Data
+            return @.config_Folder().path_Combine env_Site_Data
 
 siteData_TM_Config:
 

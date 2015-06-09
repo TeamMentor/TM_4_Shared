@@ -1,0 +1,33 @@
+{
+  "name": "TM_4_Shared",
+  "version": "0.0.1",
+  "description": "Shared Libraries for TM 4.x",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "chai": "^2.3.0",
+    "coffee-script": "^1.9.3",
+    "fluentnode": "^0.4.0"
+  },
+  "devDependencies": {
+    "coffee-coverage": "^0.6.0",
+    "istanbul": "^0.3.14",
+    "mocha": "^2.2.5"
+  },
+  "scripts": {
+    "test": "node ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register test --recursive -R list",
+    "test-watch": "node ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register test --recursive -R list -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TeamMentor/TM_4_Shared.git"
+  },
+  "author": "Dinis Cruz <dinis.cruz@owasp.org> (http://blog.diniscruz.com/)",
+  "license": "TM Commercial License",
+  "bugs": {
+    "url": "https://github.com/TeamMentor/TM_4_Shared/issues"
+  },
+  "homepage": "https://github.com/TeamMentor/TM_4_Shared"
+}

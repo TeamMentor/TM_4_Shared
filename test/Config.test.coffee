@@ -13,3 +13,6 @@ describe '| Config |', ()->
 
   it 'jade_Compilation', ->
     config.jade_Compilation().assert_Contains ['.tmCache', 'jade_Compilation']
+
+  it 'jade_Cache', ->
+    config.jade_Cache().assert_False()

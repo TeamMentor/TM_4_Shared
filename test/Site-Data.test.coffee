@@ -11,6 +11,9 @@ describe '| Site-Data |', ()->
   it 'constructor', ->
     site_Data.assert_Is_Object()
 
+  it 'config_Folder', ->
+    site_Data.config_Folder()
+
   #it "Ctor (w/ custom values)", ->
   #   config = new Config()
 
@@ -32,23 +35,24 @@ describe '| Site-Data |', ()->
 
   describe '| with custom SiteData location',->
 
-    siteData_Folder = '_tmp_SiteData'
-    siteData_Name   = 'SiteData_Temp'
+    folder_Name     = '_tmp_Config'
+    siteData_Name   = '_tmp_SiteData'
+    config_Folder   = null
     tmConfig        =
       tm_Design:
         port: 12345
       tm_Graph:
         port: 23456
 
-    before ->
-      siteData_Folder = siteData_Folder             .folder_Create()                .assert_Folder_Exists()
-      siteData_Folder.path_Combine(siteData_Name   ).folder_Create()                .assert_Folder_Exists()
-                     .path_Combine('TM_4'          ).folder_Create()                .assert_Folder_Exists()
-                     .path_Combine('tm.config.json').file_Write(tmConfig.json_Str()).assert_File_Exists()
+    beforeEach ->
+      config_Folder = folder_Name                 .folder_Create()                .assert_Folder_Exists()
+      config_Folder.path_Combine(siteData_Name   ).folder_Create()                .assert_Folder_Exists()
+                   .path_Combine('TM_4'          ).folder_Create()                .assert_Folder_Exists()
+                   .path_Combine('tm.config.json').file_Write(tmConfig.json_Str()).assert_File_Exists()
 
-    after ->
-      siteData_Folder.folder_Delete_Recursive()
-      .assert_True()
+    afterEach ->
+      config_Folder.folder_Delete_Recursive()
+                   .assert_True()
 
     it 'When process.env.TM_SITE_DATA is not set', ->
       using new Site_Data(), ->
@@ -57,29 +61,39 @@ describe '| Site-Data |', ()->
 
     it 'siteData_Folder (when process.env.TM_SITE_DATA is set to a full path)', ->
       using new Site_Data(), ->
-        process.env[static_Strings.ENV_TM_SITE_DATA] = siteData_Folder
-        @.siteData_Folder().assert_Is siteData_Folder
+        process.env[static_Strings.ENV_TM_SITE_DATA] = config_Folder
+        @.siteData_Folder().assert_Is config_Folder
 
-    it.only '@.siteData_Folder (when process.env.TM_SITE_DATA is set to a virtual path)', ->
+    it 'siteData_Folder (when process.env.TM_SITE_DATA is set to a virtual path)', ->
       using new Site_Data(), ->
-        virtual_Path = "#{siteData_Folder.folder_Name()}/#{siteData_Name}"
-        log virtual_Path
-        process.env[@.DEFAULT_ENV_TM_SITE_DATA] = virtual_Path
+        virtual_Path = "#{siteData_Name}"
+        process.env[static_Strings.ENV_TM_SITE_DATA] = virtual_Path
         @.siteData_Folder().assert_Contains virtual_Path
         virtual_Path.folder_Create()
         @.siteData_Folder().assert_Folder_Exists()
+                           .folder_Delete()
+
+    it 'siteData_Folder (when SideData folder exists)', ->
+      siteData_Folder = config_Folder.path_Combine 'SiteData'
+                                     .assert_Folder_Not_Exists()
+                                     .folder_Create()
+      using new Site_Data(), ->
+        @.config_Folder = -> config_Folder
+        @.siteData_Folder().assert_Is siteData_Folder
+        siteData_Folder.folder_Delete()
 
     it 'siteData_TM_Config, load_Options, options (when siteData_Folder is valid)', ->
       using new Site_Data(), ->
-        virtual_Path = "#{siteData_Folder.folder_Name()}/#{siteData_Name}"
-        process.env[@.ENV_TM_SITE_DATA] = virtual_Path
-        log @
-        log @.siteData_Folder()
-        log @.siteData_TM_Config()
-
+        virtual_Path = "#{folder_Name}/#{siteData_Name}"
+        process.env[static_Strings.ENV_TM_SITE_DATA] = virtual_Path
         @.siteData_TM_Config().assert_File_Exists()
         options = @.load_Options().assert_Is @._options
                                   .assert_Is @.options()
         options.tm_Design.port.assert_Is 12345
         options.tm_Graph.port.assert_Is 23456
 
+        #test corrupted tm.config.json file
+        "aaaa".save_As @.siteData_TM_Config()
+        @.load_Options().assert_Is {}
+        @.siteData_TM_Config().file_Delete()
+        @.load_Options().assert_Is {}
