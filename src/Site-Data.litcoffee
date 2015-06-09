@@ -8,10 +8,12 @@ SiteData repo
 
     class Site_Data
 
+*constructor:*
+
       constructor: (options)->
         @._options = options || {}
 
-Tries to find a 'config' folder in one of the parent folders of the current directory (__dirname)
+*config_Folder:* Tries to find a 'config' folder in one of the parent folders of the current directory (__dirname)
 
       config_Folder: ()=>
         folder = __dirname
@@ -20,8 +22,12 @@ Tries to find a 'config' folder in one of the parent folders of the current dire
           if target.file_Exists()
             return target
 
+*options:*
+
       options: ()=>
         @._options
+
+*load_Options:*
 
       load_Options: ()=>
         tmConfig_File = @.siteData_TM_Config()?.real_Path()
@@ -30,7 +36,7 @@ Tries to find a 'config' folder in one of the parent folders of the current dire
         @.options()
 
 
-Calculates the location of the SiteData using the following formula
+*siteData_Folder:* Calculates the location of the SiteData using the following formula
 
 * if there is a SiteData folder inside the @.config_Folder() use it
 * if the ENV_TM_SITE_DATA environment variable exists:
@@ -50,9 +56,7 @@ Calculates the location of the SiteData using the following formula
           else
             return @.config_Folder().path_Combine env_Site_Data
 
-siteData_TM_Config:
-
-This is the tm.config.json file used by @.load_Options
+*siteData_TM_Config:* This is the tm.config.json file used by @.load_Options
 
       siteData_TM_Config: ()=>
         @.siteData_Folder()?.path_Combine static_Strings.TM_CONFIG_FILENAME
