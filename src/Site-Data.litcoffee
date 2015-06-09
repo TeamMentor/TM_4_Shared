@@ -41,7 +41,6 @@ SiteData repo
 - if the ENV_TM_SITE_DATA environment variable exists: use it
 - if the ENV_TM_SITE_DATA environment variable doesn't exists: combine its value with @.config_Folder()
 
-
       siteData_Folder: ()=>
         config_SideData = @.config_Folder().path_Combine static_Strings.FOLDER_SITE_DATA
         if config_SideData and config_SideData.folder_Exists()
@@ -52,6 +51,12 @@ SiteData repo
             return env_Site_Data
           else
             return @.config_Folder().path_Combine env_Site_Data
+
+**siteData_Folder:** Calculates the location of the SiteData using the following formula
+
+
+      aiteData_Folder: ()=>
+        abc = 123
 
 **siteData_TM_Config:** This is the tm.config.json file used by @.load_Options
 
