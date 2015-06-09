@@ -55,8 +55,16 @@ SiteData repo
 **siteData_Folder:** Calculates the location of the SiteData using the following formula
 
 
-      aiteData_Folder: ()=>
-        abc = 123
+    siteData_Folder: ()=>
+      config_SideData = @.config_Folder().path_Combine static_Strings.FOLDER_SITE_DATA
+      if config_SideData and config_SideData.folder_Exists()
+        return config_SideData
+      env_Site_Data = process.env[static_Strings.ENV_TM_SITE_DATA]
+      if env_Site_Data
+        if env_Site_Data.folder_Exists()
+          return env_Site_Data
+        else
+          return @.config_Folder().path_Combine env_Site_Data
 
 **siteData_TM_Config:** This is the tm.config.json file used by @.load_Options
 
