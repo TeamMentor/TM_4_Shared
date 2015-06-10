@@ -30,7 +30,7 @@ SiteData repo
 **load_Options:**
 
 if @.siteData_TM_Config exists, load as json and set @._options with loaded object
-    
+
       load_Options: ()=>
         tmConfig_File = @.siteData_TM_Config()?.real_Path()
         if tmConfig_File?.file_Exists()

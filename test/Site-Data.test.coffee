@@ -92,8 +92,7 @@ describe '| Site-Data |', ()->
         options.tm_Design.port.assert_Is 12345
         options.tm_Graph.port.assert_Is 23456
 
-        #test corrupted tm.config.json file
-        "aaaa".save_As @.siteData_TM_Config()
+        "aaaa".save_As @.siteData_TM_Config()   #test corrupted tm.config.json file
         @.load_Options().assert_Is {}
         @.siteData_TM_Config().file_Delete()
         @.load_Options().assert_Is {}
