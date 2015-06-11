@@ -1,6 +1,6 @@
 Default =
   RELATIVE_PATH_TO_CONFIG_FOLDER : '../../../../../config'
-  TM_CONFIG_FILENAME             : 'TM_4/tm.config.json'
+  TM_CONFIG_FILENAME             : 'TM/tm.config.json'
   ENV_TM_SITE_DATA               : 'TM_SITE_DATA'
 
   FOLDER_SITE_DATA               : 'SiteData'
