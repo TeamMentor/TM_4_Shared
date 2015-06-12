@@ -8,7 +8,7 @@ SiteData repo
 
     class Site_Data
 
-**constructor:**
+@.**constructor**()
 
       constructor: (options)->
         @._options = options || {}
@@ -22,12 +22,26 @@ SiteData repo
           if target.file_Exists()
             return target
 
-**options:**
+@.**options**()
 
       options: ()=>
         @._options
 
-**load_Options:**
+@.**load_Custom_Code**()
+
+Finds coffee script files inside @.siteData_Folder() and loads them into
+the globals.custom object
+
+      load_Custom_Code: ()=>
+        global.custom ?= {}
+        files = @.siteData_Folder().files_Recursive('.coffee')
+        if files.not_Empty()
+          for file in files
+            global.custom[file.file_Name_Without_Extension()] = require file
+          "[SiteData] Custom code loaded: #{global.custom.keys()}".log()
+        @
+
+@.**load_Options:**()
 
 if @.siteData_TM_Config exists, load as json and set @._options with loaded object
 
@@ -37,7 +51,9 @@ if @.siteData_TM_Config exists, load as json and set @._options with loaded obje
           @._options = tmConfig_File.load_Json()
         @.options()
 
-**siteData_Folder:** Calculates the location of the SiteData using the following formula
+@.**siteData_Folder:**()
+
+Calculates the location of the SiteData using the following formula
 >
 * If there is a SiteData folder inside the config_Folder() use it
 * If the ENV_TM_SITE_DATA environment variable exists: use it
@@ -54,9 +70,12 @@ if @.siteData_TM_Config exists, load as json and set @._options with loaded obje
           else
             return @.config_Folder().path_Combine env_Site_Data
 
-**siteData_TM_Config:** This is the tm.config.json file used by @.load_Options
+@.**siteData_TM_Config:**()
+
+This is the tm.config.json file used by @.load_Options
 
       siteData_TM_Config: ()=>
         @.siteData_Folder()?.path_Combine static_Strings.TM_CONFIG_FILENAME
+
 
     module.exports = Site_Data

@@ -47,7 +47,7 @@ describe '| Site-Data |', ()->
     beforeEach ->
       config_Folder = folder_Name                 .folder_Create()                .assert_Folder_Exists()
       config_Folder.path_Combine(siteData_Name   ).folder_Create()                .assert_Folder_Exists()
-                   .path_Combine('TM_4'          ).folder_Create()                .assert_Folder_Exists()
+                   .path_Combine('TM'            ).folder_Create()                .assert_Folder_Exists()
                    .path_Combine('tm.config.json').file_Write(tmConfig.json_Str()).assert_File_Exists()
 
     afterEach ->
@@ -86,6 +86,7 @@ describe '| Site-Data |', ()->
       using new Site_Data(), ->
         virtual_Path = "#{folder_Name}/#{siteData_Name}"
         process.env[static_Strings.ENV_TM_SITE_DATA] = virtual_Path
+
         @.siteData_TM_Config().assert_File_Exists()
         options = @.load_Options().assert_Is @._options
                                   .assert_Is @.options()
@@ -96,3 +97,22 @@ describe '| Site-Data |', ()->
         @.load_Options().assert_Is {}
         @.siteData_TM_Config().file_Delete()
         @.load_Options().assert_Is {}
+
+    it 'load_Custom_Code',->
+      using new Site_Data(), ->
+        virtual_Path = "#{folder_Name}/#{siteData_Name}"
+        process.env[static_Strings.ENV_TM_SITE_DATA] = virtual_Path
+
+        express_Routes_Coffee = "module.exports = (app)-> app"
+        subFolder_File_Coffee = "module.exports = ()-> 42"
+        @.siteData_Folder().path_Combine('TM/test').folder_Create()
+        @.siteData_Folder().path_Combine('TM/express_Routes.coffee').file_Write express_Routes_Coffee
+        @.siteData_Folder().path_Combine('TM/test/subFolder_File.coffee').file_Write subFolder_File_Coffee
+
+        assert_Is_Undefined global.custom
+        @.load_Custom_Code()
+        global.custom.assert_Is_Object()
+                     .keys().assert_Is ['express_Routes','subFolder_File']
+
+        global.custom.express_Routes('aaa').assert_Is 'aaa'
+        global.custom.subFolder_File('aaa').assert_Is 42
