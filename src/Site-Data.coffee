@@ -32,14 +32,15 @@ class Site_Data
 # Finds coffee script files inside @.siteData_Folder() and loads them into
 # the globals.custom object
 
-  load_Custom_Code: ()=>
-    global.custom ?= {}
+  custom_Code: ()=>
+    #global.custom ?= {}
+    custom_Code = {}
     files = @.siteData_Folder().files_Recursive('.coffee')
     if files.not_Empty()
       for file in files
-        global.custom[file.file_Name_Without_Extension()] = require file
+        custom_Code[file.file_Name_Without_Extension()] = require file
       "[SiteData] Custom code loaded: #{global.custom.keys()}".log()
-    @
+    custom_Code
 
 # @.**load_Options:**()
 
