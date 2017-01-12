@@ -7,14 +7,14 @@
     "test": "test"
   },
   "dependencies": {
-    "chai": "^2.3.0",
+    "chai": "^3.5.0",
     "coffee-script": "^1.9.3",
-    "fluentnode": "^0.4.0"
+    "fluentnode": "^0.6.5"
   },
   "devDependencies": {
-    "coffee-coverage": "^0.6.0",
-    "istanbul": "^0.3.14",
-    "mocha": "^2.2.5"
+    "coffee-coverage": "^1.0.1",
+    "istanbul": "^0.4.5",
+    "mocha": "^3.2.0"
   },
   "scripts": {
     "test": "node ./node_modules/mocha/bin/mocha --compilers coffee:coffee-script/register test --recursive -R list",
